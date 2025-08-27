@@ -95,12 +95,12 @@ export function ServicesSection() {
   return (
     <div className="min-h-screen py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* <div className="text-center mb-16">
+        <div className="text-center mb-16">
           <h1 className="text-4xl lg:text-6xl font-bold mb-6">
             My <span className="text-purple-500">Services</span>
           </h1>
        
-        </div> */}
+        </div>
 
         {/* Mobile Layout - Horizontal Carousel */}
         <div className="block md:hidden mb-16">

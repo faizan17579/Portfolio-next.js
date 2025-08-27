@@ -225,7 +225,7 @@ export function InteractiveContactForm() {
       </Card>
 
       {/* Enhanced Contact Information */}
-      <div className="space-y-4">
+      {/* <div className="space-y-4">
         {contactInfo.map((info, index) => {
           const Icon = info.icon
           return (
@@ -251,7 +251,7 @@ export function InteractiveContactForm() {
             </a>
           )
         })}
-      </div>
+      </div> */}
     </div>
   )
 }
