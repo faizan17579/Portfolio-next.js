@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { Code, Home, User, Briefcase, FolderOpen, Mail, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -8,13 +8,13 @@ export function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
   const [activeSection, setActiveSection] = useState("home")
 
-  const navItems = [
+  const navItems = useMemo(() => [
     { href: "#home", label: "Home", icon: Home, id: "home" },
     { href: "#about", label: "About", icon: User, id: "about" },
     { href: "#services", label: "Services", icon: Briefcase, id: "services" },
     { href: "#projects", label: "Projects", icon: FolderOpen, id: "projects" },
     { href: "#contact", label: "Contact", icon: Mail, id: "contact" },
-  ]
+  ], [])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,7 +37,7 @@ export function Navigation() {
 
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+  }, [navItems])
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)

@@ -82,7 +82,7 @@ export function ServicesSection() {
       })
     }, 3000)
     return () => clearInterval(id)
-  }, [])
+  }, [services.length])
 
   useEffect(() => {
     const carousel = carouselRef.current
@@ -193,7 +193,7 @@ export function ServicesSection() {
             Ready to Start Your <span className="text-purple-500">Project</span>?
           </h2>
           <p className="text-gray-400 mb-8 max-w-2xl mx-auto text-sm sm:text-base">
-            Let's discuss your ideas and create something amazing together. I'm here to help bring your vision to life
+            Let&apos;s discuss your ideas and create something amazing together. I&apos;m here to help bring your vision to life
             with cutting-edge technology.
           </p>
           <Button size="lg" className="bg-purple-600 hover:bg-purple-700" onClick={scrollToContact}>

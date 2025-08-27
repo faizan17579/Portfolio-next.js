@@ -21,12 +21,12 @@ export default function Home() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
               <div className="space-y-4">
-                <p className="text-purple-400 text-sm font-medium tracking-wide uppercase">Hello, I'm</p>
+                <p className="text-purple-400 text-sm font-medium tracking-wide uppercase">Hello, I&apos;m</p>
                 <h1 className="text-5xl lg:text-7xl font-bold">
                   <span className="text-purple-500">Faizan Rasheed</span>
                 </h1>
                 <h2 className="text-2xl lg:text-3xl text-gray-300 font-light">
-                  I'm a <RoleChanger />
+                  I&apos;m a <RoleChanger />
                 </h2>
               </div>
 

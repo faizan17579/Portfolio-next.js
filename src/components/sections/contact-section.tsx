@@ -46,8 +46,8 @@ export function ContactSection() {
 
           {/* 3D Earth - Integrated Design */}
           <div className="relative flex flex-col gap-3 sm:gap-4 order-1 lg:order-2">
-          <div className="text-center text-gray-400 text-xs sm:text-sm italic">
-              "Explore the technologies orbiting my development universe"
+                      <div className="text-center text-gray-400 text-xs sm:text-sm italic">
+              &quot;Explore the technologies orbiting my development universe&quot;
             </div>
             <div className="relative h-[360px] sm:h-[420px] md:h-[500px] lg:h-[600px] w-full">
               <div className="absolute inset-0 bg-gradient-to-br from-purple-900/5 via-transparent to-blue-900/5 rounded-2xl" />
@@ -96,11 +96,11 @@ export function ContactSection() {
               </div>
 
               <h2 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">
-                Let's Build Something <span className="text-purple-500">Amazing</span>
+                Let&apos;s Build Something <span className="text-purple-500">Amazing</span>
               </h2>
               <p className="text-gray-400 mb-6 sm:mb-8 max-w-2xl mx-auto text-sm sm:text-base">
                 Whether you have a groundbreaking idea, need technical expertise, or want to collaborate on innovative
-                projects, I'm here to help transform your vision into reality.
+                projects, I&apos;m here to help transform your vision into reality.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">

@@ -2,9 +2,7 @@
 
 import Image from "next/image"
 import { motion } from "framer-motion"
-import { Calendar, Award, Users, Coffee } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+
 
 export function AboutSection() {
 

@@ -36,7 +36,7 @@ export function InteractiveContactForm() {
     }
   }, [focusedField])
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     await formspreeSubmit(e)
   }
@@ -241,7 +241,7 @@ export function InteractiveContactForm() {
               </div>
               <div className="relative z-10">
                 <p className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors font-mono">{info.label.toLowerCase()}:</p>
-                <p className="text-white font-medium group-hover:text-purple-300 transition-colors font-mono">"{info.value}"</p>
+                <p className="text-white font-medium group-hover:text-purple-300 transition-colors font-mono">&quot;{info.value}&quot;</p>
               </div>
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                 {[...Array(3)].map((_, i) => (

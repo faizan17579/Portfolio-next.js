@@ -1,9 +1,9 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 
 export function TypewriterRole() {
-  const roles = ["Full Stack Developer", "Software Engineer", "AI Integration Engineer", "DevOps Engineer"]
+  const roles = useMemo(() => ["Full Stack Developer", "Software Engineer", "AI Integration Engineer", "DevOps Engineer"], [])
 
   const [currentRoleIndex, setCurrentRoleIndex] = useState(0)
   const [currentText, setCurrentText] = useState("")

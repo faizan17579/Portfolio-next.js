@@ -1,9 +1,9 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 
 export function AdvancedRoleChanger() {
-  const roles = [
+  const roles = useMemo(() => [
     {
       title: "Full Stack Developer",
       color: "from-purple-400 to-purple-600",
@@ -24,7 +24,7 @@ export function AdvancedRoleChanger() {
       color: "from-orange-400 to-orange-600",
       icon: "🚀",
     },
-  ]
+  ], [])
 
   const [currentRoleIndex, setCurrentRoleIndex] = useState(0)
   const [currentText, setCurrentText] = useState("")

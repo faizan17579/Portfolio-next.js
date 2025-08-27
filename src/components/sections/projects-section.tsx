@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { ExternalLink, Github, Heart, Eye, Award } from "lucide-react"
+import { Github, Award } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -711,7 +711,7 @@ export function ProjectsSection() {
             Like What You <span className="text-purple-500">See</span>?
           </h2>
           <p className="text-gray-400 mb-8 max-w-2xl mx-auto">
-            I'm always working on new projects and exploring cutting-edge technologies. Let's collaborate and create
+            I&apos;m always working on new projects and exploring cutting-edge technologies. Let&apos;s collaborate and create
             something amazing together.
           </p>
           <Button

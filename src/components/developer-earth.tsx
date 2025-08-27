@@ -4,10 +4,15 @@ import { useEffect, useRef, useState, useMemo } from "react"
 import { Canvas, useFrame, useThree } from "@react-three/fiber"
 import { OrbitControls, Stars, Html } from "@react-three/drei"
 import * as THREE from "three"
-import { Code, Database, Globe, Smartphone, Server, Cpu, GitBranch, Terminal, Zap, Shield, Cloud } from "lucide-react"
+
 
 // Tech Icon Component
-function TechIcon({ position, icon: Icon, color, name, speed }: any) {
+function TechIcon({ position, color, name, speed }: {
+  position: { x: number; y: number; z: number };
+  color: string;
+  name: string;
+  speed: number;
+}) {
   const meshRef = useRef<THREE.Mesh>(null)
   const [hovered, setHovered] = useState(false)
   
@@ -228,17 +233,17 @@ function Scene() {
   }, [camera])
   
   const techIcons = [
-    { icon: Code, color: "#a855f7", name: "Frontend", position: { x: 6, y: 0, z: 0 }, speed: 0.5 },
-    { icon: Database, color: "#3b82f6", name: "Database", position: { x: -6, y: 0, z: 0 }, speed: 0.7 },
-    { icon: Server, color: "#10b981", name: "Backend", position: { x: 0, y: 0, z: 6 }, speed: 0.6 },
-    { icon: Smartphone, color: "#ec4899", name: "Mobile", position: { x: 0, y: 0, z: -6 }, speed: 0.8 },
-    { icon: Cpu, color: "#eab308", name: "AI/ML", position: { x: 4, y: 4, z: 4 }, speed: 0.4 },
-    { icon: GitBranch, color: "#f97316", name: "DevOps", position: { x: -4, y: -4, z: -4 }, speed: 0.9 },
-    { icon: Terminal, color: "#06b6d4", name: "CLI", position: { x: 3, y: -3, z: 3 }, speed: 0.3 },
-    { icon: Globe, color: "#6366f1", name: "Web", position: { x: -3, y: 3, z: -3 }, speed: 0.6 },
-    { icon: Zap, color: "#fbbf24", name: "Performance", position: { x: 5, y: -2, z: -1 }, speed: 0.7 },
-    { icon: Shield, color: "#34d399", name: "Security", position: { x: -5, y: 2, z: 1 }, speed: 0.5 },
-    { icon: Cloud, color: "#60a5fa", name: "Cloud", position: { x: 1, y: 5, z: -2 }, speed: 0.8 },
+    { color: "#a855f7", name: "Frontend", position: { x: 6, y: 0, z: 0 }, speed: 0.5 },
+    { color: "#3b82f6", name: "Database", position: { x: -6, y: 0, z: 0 }, speed: 0.7 },
+    { color: "#10b981", name: "Backend", position: { x: 0, y: 0, z: 6 }, speed: 0.6 },
+    { color: "#ec4899", name: "Mobile", position: { x: 0, y: 0, z: -6 }, speed: 0.8 },
+    { color: "#eab308", name: "AI/ML", position: { x: 4, y: 4, z: 4 }, speed: 0.4 },
+    { color: "#f97316", name: "DevOps", position: { x: -4, y: -4, z: -4 }, speed: 0.9 },
+    { color: "#06b6d4", name: "CLI", position: { x: 3, y: -3, z: 3 }, speed: 0.3 },
+    { color: "#6366f1", name: "Web", position: { x: -3, y: 3, z: -3 }, speed: 0.6 },
+    { color: "#fbbf24", name: "Performance", position: { x: 5, y: -2, z: -1 }, speed: 0.7 },
+    { color: "#34d399", name: "Security", position: { x: -5, y: 2, z: 1 }, speed: 0.5 },
+    { color: "#60a5fa", name: "Cloud", position: { x: 1, y: 5, z: -2 }, speed: 0.8 },
   ]
   
         return (
@@ -260,7 +265,6 @@ function Scene() {
         <TechIcon
             key={index}
           position={tech.position}
-          icon={tech.icon}
           color={tech.color}
           name={tech.name}
           speed={tech.speed}
