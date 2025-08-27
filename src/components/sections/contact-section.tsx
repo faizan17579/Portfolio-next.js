@@ -7,7 +7,7 @@ import { InteractiveContactForm } from "@/components/interactive-contact-form"
 
 export function ContactSection() {
   return (
-    <div className="min-h-screen bg-black py-16 sm:py-20 relative overflow-hidden">
+    <div className="min-h-screen py-16 sm:py-20 relative overflow-hidden">
       {/* Cosmic background */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-transparent to-blue-900/10" />
@@ -111,6 +111,7 @@ export function ContactSection() {
                   <Rocket className="mr-2 h-4 w-4 group-hover:animate-bounce" />
                   Schedule a Call
                 </Button>
+                <a href="https://drive.google.com/file/d/1-aHZXy6I8aeT4E78DLuZbBfW1PIbdYcf/view?usp=sharing" target="_blank">
                 <Button
                   size="lg"
                   variant="outline"
@@ -119,6 +120,7 @@ export function ContactSection() {
                   <Code2 className="mr-2 h-4 w-4 group-hover:animate-pulse" />
                   View My Resume
                 </Button>
+                </a>
               </div>
             </div>
 

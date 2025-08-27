@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent } from "@/components/ui/card"
+import { useForm, ValidationError } from "@formspree/react"
 
 export function InteractiveContactForm() {
   const [formData, setFormData] = useState({
@@ -15,12 +16,14 @@ export function InteractiveContactForm() {
     message: "",
   })
   const [focusedField, setFocusedField] = useState<string | null>(null)
-  const [isSubmitting, setIsSubmitting] = useState(false)
   const [particles, setParticles] = useState<Array<{ id: number; x: number; y: number }>>([])
   const formRef = useRef<HTMLDivElement>(null)
 
+  // Formspree integration
+  const [state, formspreeSubmit] = useForm("xyzdzybl")
+  const isSubmitting = state.submitting
+
   useEffect(() => {
-    // Generate particles when form is focused
     if (focusedField) {
       const newParticles = Array.from({ length: 12 }, (_, i) => ({
         id: Date.now() + i,
@@ -28,7 +31,6 @@ export function InteractiveContactForm() {
         y: Math.random() * 100,
       }))
       setParticles(newParticles)
-
       const timer = setTimeout(() => setParticles([]), 3000)
       return () => clearTimeout(timer)
     }
@@ -36,13 +38,7 @@ export function InteractiveContactForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsSubmitting(true)
-
-    // Simulate form submission with success animation
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-
-    setIsSubmitting(false)
-    console.log("Form submitted:", formData)
+    await formspreeSubmit(e)
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -79,6 +75,15 @@ export function InteractiveContactForm() {
     },
   ]
 
+  if (state.succeeded) {
+    return (
+      <Card className="bg-gray-900/80 backdrop-blur-sm border-gray-800 p-10 text-center">
+        <div className="text-2xl font-bold text-white mb-2">Thank you!</div>
+        <p className="text-gray-400">Your message has been sent successfully. I’ll get back to you soon.</p>
+      </Card>
+    )
+  }
+
   return (
     <div className="space-y-8">
       <Card
@@ -92,11 +97,7 @@ export function InteractiveContactForm() {
           <div
             key={particle.id}
             className="absolute w-px h-8 bg-gradient-to-b from-purple-400 via-blue-400 to-transparent animate-pulse pointer-events-none"
-            style={{
-              top: `${particle.y}%`,
-              left: `${particle.x}%`,
-              animationDuration: "2s",
-            }}
+            style={{ top: `${particle.y}%`, left: `${particle.x}%`, animationDuration: "2s" }}
           />
         ))}
 
@@ -127,16 +128,8 @@ export function InteractiveContactForm() {
               <h2 className="text-2xl font-bold text-white">Initialize Contact</h2>
             </div>
             <div className="flex items-center gap-1">
-              <Wifi
-                className={`h-4 w-4 transition-all duration-300 ${
-                  focusedField ? "text-green-400 animate-pulse" : "text-gray-600"
-                }`}
-              />
-              <Sparkles
-                className={`h-5 w-5 transition-all duration-300 ${
-                  focusedField ? "text-purple-400 animate-spin" : "text-gray-600"
-                }`}
-              />
+              <Wifi className={`h-4 w-4 transition-all duration-300 ${focusedField ? "text-green-400 animate-pulse" : "text-gray-600"}`} />
+              <Sparkles className={`h-5 w-5 transition-all duration-300 ${focusedField ? "text-purple-400 animate-spin" : "text-gray-600"}`} />
             </div>
           </div>
 
@@ -159,9 +152,6 @@ export function InteractiveContactForm() {
                 }`}
                 required
               />
-              {focusedField === "name" && (
-                <div className="absolute -inset-1 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-lg blur-sm -z-10 animate-pulse" />
-              )}
             </div>
 
             <div className="relative group">
@@ -182,9 +172,7 @@ export function InteractiveContactForm() {
                 }`}
                 required
               />
-              {focusedField === "email" && (
-                <div className="absolute -inset-1 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg blur-sm -z-10 animate-pulse" />
-              )}
+              <ValidationError prefix="Email" field="email" errors={state.errors} />
             </div>
 
             <div className="relative group">
@@ -204,9 +192,7 @@ export function InteractiveContactForm() {
                 }`}
                 required
               />
-              {focusedField === "message" && (
-                <div className="absolute -inset-1 bg-gradient-to-r from-green-500/20 to-purple-500/20 rounded-lg blur-sm -z-10 animate-pulse" />
-              )}
+              <ValidationError prefix="Message" field="message" errors={state.errors} />
             </div>
 
             <Button
@@ -233,23 +219,6 @@ export function InteractiveContactForm() {
                   </>
                 )}
               </div>
-
-              {/* Button particles */}
-              {!isSubmitting && (
-                <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300">
-                  {[...Array(8)].map((_, i) => (
-                    <div
-                      key={i}
-                      className="absolute w-px h-px bg-white rounded-full animate-ping"
-                      style={{
-                        top: `${20 + i * 8}%`,
-                        left: `${10 + i * 10}%`,
-                        animationDelay: `${i * 0.15}s`,
-                      }}
-                    />
-                  ))}
-                </div>
-              )}
             </Button>
           </form>
         </CardContent>
@@ -265,41 +234,18 @@ export function InteractiveContactForm() {
               href={info.href}
               className={`flex items-center gap-4 p-4 bg-gray-900/60 backdrop-blur-sm rounded-lg border border-gray-800 hover:border-purple-500/50 transition-all duration-300 group relative overflow-hidden`}
             >
-              {/* Hover effect background */}
-              <div
-                className={`absolute inset-0 bg-gradient-to-r ${info.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`}
-              />
-
-              {/* Connection line animation */}
+              <div className={`absolute inset-0 bg-gradient-to-r ${info.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
               <div className="absolute left-0 top-1/2 w-0 h-px bg-purple-400 group-hover:w-full transition-all duration-500 transform -translate-y-1/2" />
-
-              <div
-                className={`${info.bgColor} p-3 rounded-lg group-hover:scale-110 transition-transform duration-300 relative z-10 border border-gray-700/50`}
-              >
+              <div className={`${info.bgColor} p-3 rounded-lg group-hover:scale-110 transition-transform duration-300 relative z-10 border border-gray-700/50`}>
                 <Icon className={`h-5 w-5 bg-gradient-to-r ${info.color} bg-clip-text text-transparent`} />
               </div>
               <div className="relative z-10">
-                <p className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors font-mono">
-                  {info.label.toLowerCase()}:
-                </p>
-                <p className="text-white font-medium group-hover:text-purple-300 transition-colors font-mono">
-                  "{info.value}"
-                </p>
+                <p className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors font-mono">{info.label.toLowerCase()}:</p>
+                <p className="text-white font-medium group-hover:text-purple-300 transition-colors font-mono">"{info.value}"</p>
               </div>
-
-              {/* Data stream particles */}
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                 {[...Array(3)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="absolute w-px h-4 bg-purple-400/50 animate-pulse"
-                    style={{
-                      top: `${30 + i * 20}%`,
-                      right: `${15 + i * 10}%`,
-                      animationDelay: `${i * 0.2}s`,
-                      animationDuration: "1.5s",
-                    }}
-                  />
+                  <div key={i} className="absolute w-px h-4 bg-purple-400/50 animate-pulse" style={{ top: `${30 + i * 20}%`, right: `${15 + i * 10}%`, animationDelay: `${i * 0.2}s`, animationDuration: "1.5s" }} />
                 ))}
               </div>
             </a>

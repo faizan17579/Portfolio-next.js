@@ -36,7 +36,7 @@ export function CodeEditor() {
   return (
     <div className="relative">
       <div className="bg-gray-900 rounded-lg border border-gray-700 overflow-hidden shadow-2xl">
-        <div className="flex items-center justify-between px-4 py-3 bg-gray-800 border-b border-gray-700">
+        <div className="flex items-center justify-between px-4 py-1 bg-gray-800 border-b border-gray-700">
           <div className="flex items-center space-x-2">
             <div className="w-3 h-3 bg-red-500 rounded-full"></div>
             <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
@@ -45,7 +45,7 @@ export function CodeEditor() {
           <span className="text-gray-400 text-sm">engineer.js</span>
         </div>
 
-        <div className="p-4 font-mono text-sm">
+        <div className="p-2 font-mono text-sm">
           {codeLines.map((line, index) => (
             <div
               key={index}

@@ -12,7 +12,7 @@ import { RoleChanger } from "@/components/role-changer"
 
 export default function Home() {
   return (
-    <div className="bg-black">
+    <div>
       <FloatingElements />
 
       {/* Hero Section */}
@@ -42,11 +42,11 @@ export default function Home() {
                 </div>
                 <div className="flex items-center gap-2 text-gray-400">
                   <MapPin className="h-4 w-4" />
-                  <span>G11 Islamabad</span>
+                  <span>G11 Islamabad, Pakistan</span>
                 </div>
                 <div className="flex items-center gap-2 text-gray-400">
                   <Mail className="h-4 w-4" />
-                  <span>faizanrasheed175@example.com</span>
+                  <span>faizanrasheed2175@gmail.com</span>
                 </div>
               </div>
 
@@ -59,7 +59,8 @@ export default function Home() {
                   <ArrowRight className="mr-2 h-4 w-4" />
                   View My Work
                 </Button>
-               <a href="/resume.pdf" download>
+               <a href="https://drive.google.com/uc?export=download&id=1-aHZXy6I8aeT4E78DLuZbBfW1PIbdYcf
+" download>
               <Button size="lg" variant="outline" className="border-gray-600 hover:bg-gray-800 bg-transparent">
                 <Download className="mr-2 h-4 w-4" />
                 Download Resume

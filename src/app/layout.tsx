@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
 import { Navigation } from "@/components/navigation"
+import InteractiveBackground from "@/components/interactive-background"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -19,9 +20,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.className} bg-black text-white min-h-screen`}>
-        <Navigation />
-        <main className="pt-20">{children}</main>
+      <body className={`${inter.className} text-white min-h-screen`}>
+        <InteractiveBackground />
+        <div className="relative z-10">
+          <Navigation />
+          <main className="pt-20">{children}</main>
+        </div>
       </body>
     </html>
   )

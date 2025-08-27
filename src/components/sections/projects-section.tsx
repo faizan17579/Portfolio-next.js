@@ -14,6 +14,12 @@ export function ProjectsSection() {
   const carouselRef = useRef<HTMLDivElement | null>(null)
   const [isInteracting, setIsInteracting] = useState(false)
   
+  // Mobile carousels state/refs
+  const mobileProjectsRef = useRef<HTMLDivElement | null>(null)
+  const [mobileProjectsIndex, setMobileProjectsIndex] = useState(0)
+  const mobileCertificatesRef = useRef<HTMLDivElement | null>(null)
+  const [mobileCertificatesIndex, setMobileCertificatesIndex] = useState(0)
+  
   // Carousel states for different tabs
   const [certificatesSlide, setCertificatesSlide] = useState(0)
   const [isCertificatesAutoPlaying, setIsCertificatesAutoPlaying] = useState(true)
@@ -187,45 +193,34 @@ export function ProjectsSection() {
   ]
 
   const featuredProjects = projects.filter((project) => project.featured)
-  // other projects removed per request
   
-  // Auto-rotation logic for one-by-one movement with fixed card sizes
-  const totalSlides = featuredProjects.length - 2 // Show 3 at a time, so we can move (total - 2) times
-  const totalCertificatesSlides = Math.max(0, certificates.length - 2) // Show 3 at a time
+  // Desktop auto-rotation (showing 3 at a time)
+  const totalSlides = featuredProjects.length - 2
+  const totalCertificatesSlides = Math.max(0, certificates.length - 2)
   
-  // Auto-rotation logic for one-by-one movement with fixed card sizes
   useEffect(() => {
     if (!isAutoPlaying) return
-    
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % totalSlides)
-    }, 3000) // Change slide every 5 seconds
-    
+    }, 3000)
     return () => clearInterval(interval)
   }, [isAutoPlaying, totalSlides])
   
-  // Auto-rotation for certificates
   useEffect(() => {
     if (!isCertificatesAutoPlaying) return
-    
     const interval = setInterval(() => {
       setCertificatesSlide((prev) => (prev + 1) % Math.max(1, totalCertificatesSlides))
-    }, 3000) // Change slide every 5 seconds
-    
+    }, 3000)
     return () => clearInterval(interval)
   }, [isCertificatesAutoPlaying, totalCertificatesSlides])
   
-  // Mouse wheel support
+  // Mouse wheel support (desktop)
   useEffect(() => {
     const el = carouselRef.current
     if (!el) return
 
     const handleWheel = (e: WheelEvent) => {
-      // Only hijack wheel when not interacting with a card overlay/content
-      if (isInteracting) {
-        // Allow default scrolling within the modal/content
-        return
-      }
+      if (isInteracting) return
       e.preventDefault()
       if (e.deltaY > 0) {
         setCurrentSlide((prev) => (prev + 1) % totalSlides)
@@ -239,28 +234,62 @@ export function ProjectsSection() {
     }
 
     el.addEventListener('wheel', handleWheel, { passive: false })
-
-    return () => {
-      el.removeEventListener('wheel', handleWheel)
-    }
+    return () => el.removeEventListener('wheel', handleWheel)
   }, [totalSlides, isInteracting])
-  
+
   const goToSlide = (index: number) => {
     setCurrentSlide(index)
     setIsAutoPlaying(false)
-    // Resume auto-play after 3 seconds
     setTimeout(() => setIsAutoPlaying(true), 3000)
   }
 
   const goToCertificatesSlide = (index: number) => {
     setCertificatesSlide(index)
     setIsCertificatesAutoPlaying(false)
-    // Resume auto-play after 3 seconds
     setTimeout(() => setIsCertificatesAutoPlaying(true), 3000)
   }
 
+  // Mobile autoplay and scroll handlers (3s)
+  useEffect(() => {
+    const el = mobileProjectsRef.current
+    if (!el) return
+    const id = setInterval(() => {
+      setMobileProjectsIndex((prev) => {
+        const next = (prev + 1) % featuredProjects.length
+        el.scrollTo({ left: next * el.clientWidth, behavior: 'smooth' })
+        return next
+      })
+    }, 3000)
+    return () => clearInterval(id)
+  }, [featuredProjects.length])
+
+  useEffect(() => {
+    const el = mobileCertificatesRef.current
+    if (!el) return
+    const id = setInterval(() => {
+      setMobileCertificatesIndex((prev) => {
+        const next = (prev + 1) % certificates.length
+        el.scrollTo({ left: next * el.clientWidth, behavior: 'smooth' })
+        return next
+      })
+    }, 3000)
+    return () => clearInterval(id)
+  }, [certificates.length])
+
+  const onMobileProjectsScroll = () => {
+    const el = mobileProjectsRef.current
+    if (!el) return
+    setMobileProjectsIndex(Math.round(el.scrollLeft / el.clientWidth))
+  }
+
+  const onMobileCertificatesScroll = () => {
+    const el = mobileCertificatesRef.current
+    if (!el) return
+    setMobileCertificatesIndex(Math.round(el.scrollLeft / el.clientWidth))
+  }
+
   return (
-    <div className="min-h-screen bg-black py-20">
+    <div className="min-h-screen py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <div className="flex items-center justify-center gap-2 mb-4">
@@ -268,8 +297,6 @@ export function ProjectsSection() {
             <span className="text-purple-400 text-sm font-medium tracking-wide uppercase">My recent work</span>
           </div>
           
-         
-
           {/* Tab Navigation */}
           <div className="flex justify-center gap-4 mb-8">
             <button
@@ -306,11 +333,15 @@ export function ProjectsSection() {
           <>
             {/* Featured Projects Carousel - Responsive Design */}
             <div className="relative mb-16">
-              {/* Mobile Layout - Vertical Stack */}
+              {/* Mobile Layout - Horizontal Carousel */}
               <div className="block md:hidden">
-                <div className="grid gap-4">
+                <div
+                  ref={mobileProjectsRef}
+                  onScroll={onMobileProjectsScroll}
+                  className="flex gap-4 overflow-x-auto snap-x snap-mandatory hide-scrollbar pb-4 px-4"
+                >
                   {featuredProjects.map((project, index) => (
-                    <div key={index} className="w-full">
+                    <div key={index} className="flex-shrink-0 w-[calc(100vw-2rem)] snap-center">
                       <Card
                         className="bg-gray-900 border-gray-800 overflow-hidden group hover:border-purple-500/50 transition-all duration-300 h-[500px] relative"
                         onMouseEnter={() => { setIsAutoPlaying(false); setIsInteracting(true) }}
@@ -320,7 +351,7 @@ export function ProjectsSection() {
                         onTouchStart={() => { setIsAutoPlaying(false); setIsInteracting(true) }}
                         onTouchEnd={() => { setIsAutoPlaying(true); setIsInteracting(false) }}
                       >
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 h-full">
+                        <div className="grid grid-cols-1 gap-4 p-4 h-full">
                           <div className="relative overflow-hidden rounded-lg">
                             <Image
                               src={project.image || "/placeholder.svg"}
@@ -329,27 +360,15 @@ export function ProjectsSection() {
                               height={300}
                               className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                             />
-                            <div className="absolute top-4 right-4 flex gap-2">
-                              <div className="bg-black/70 backdrop-blur-sm rounded-full px-3 py-1 flex items-center gap-1">
-                                <Heart className="h-3 w-3 text-red-400" />
-                                <span className="text-xs text-white">{project.likes}</span>
-                              </div>
-                              <div className="bg-black/70 backdrop-blur-sm rounded-full px-3 py-1 flex items-center gap-1">
-                                <Eye className="h-3 w-3 text-blue-400" />
-                                <span className="text-xs text-white">{project.views}</span>
-                              </div>
-                            </div>
                           </div>
 
                           <div className="space-y-3 flex flex-col h-full">
                             <h3 className="text-lg font-bold text-white group-hover:text-purple-400 transition-colors">
                               {project.title}
                             </h3>
-                            
                             <p className="text-gray-400 text-sm leading-relaxed line-clamp-4">
                               {project.description}
                             </p>
-
                             <div className="flex flex-wrap gap-1">
                               {project.technologies.slice(0, 4).map((tech, techIndex) => (
                                 <Badge key={techIndex} variant="secondary" className="bg-purple-600/20 text-purple-300 text-xs">
@@ -362,38 +381,22 @@ export function ProjectsSection() {
                                 </Badge>
                               )}
                             </div>
-
-                            <a
-                              href={project.github}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="block mt-auto"
-                            >
-                              <Button
-                                size="sm"
-                                className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white text-sm h-9"
-                              >
+                            <a href={project.github} target="_blank" rel="noopener noreferrer" className="block mt-auto">
+                              <Button size="sm" className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white text-sm h-9">
                                 <Github className="h-4 w-4 mr-2" />
                                 Code
                               </Button>
                             </a>
                           </div>
                         </div>
-
-                        {/* Hover Overlay Modal for Mobile */}
+                        
+                        {/* Hover Overlay Modal (Mobile) */}
                         <div className="absolute inset-0 bg-black/90 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col p-6">
-                          {/* Scrollable Content Area */}
                           <div className="flex-1 overflow-hidden">
                             <div className="h-full overflow-y-auto hide-scrollbar">
                               <div className="text-center space-y-4">
-                                <h3 className="text-lg font-bold text-white">
-                                  {project.title}
-                                </h3>
-                                
-                                <p className="text-gray-300 text-sm leading-relaxed">
-                                  {project.description}
-                                </p>
-
+                                <h3 className="text-lg font-bold text-white">{project.title}</h3>
+                                <p className="text-gray-300 text-sm leading-relaxed">{project.description}</p>
                                 <div className="space-y-2">
                                   <p className="text-purple-400 text-xs font-medium">Technologies Used:</p>
                                   <div className="flex flex-wrap gap-1 justify-center">
@@ -407,8 +410,6 @@ export function ProjectsSection() {
                               </div>
                             </div>
                           </div>
-
-                          {/* Fixed GitHub Icon Button - Always Visible */}
                           <div className="flex justify-center pt-4 flex-shrink-0">
                             <a
                               href={project.github}
@@ -422,6 +423,23 @@ export function ProjectsSection() {
                         </div>
                       </Card>
                     </div>
+                  ))}
+                </div>
+                {/* Dots */}
+                <div className="flex justify-center mt-6 gap-2">
+                  {featuredProjects.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => {
+                        const el = mobileProjectsRef.current
+                        if (el) el.scrollTo({ left: index * el.clientWidth, behavior: 'smooth' })
+                        setMobileProjectsIndex(index)
+                      }}
+                      className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                        index === mobileProjectsIndex ? 'bg-purple-500' : 'bg-gray-600/70'
+                      }`}
+                      aria-label={`Go to slide ${index + 1}`}
+                    />
                   ))}
                 </div>
               </div>
@@ -452,14 +470,6 @@ export function ProjectsSection() {
                             height={220}
                             className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500"
                           />
-                          <div className="absolute top-3 right-3 flex gap-2">
-                            <span className="bg-black/70 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
-                              <Heart className="h-3 w-3 text-red-400" /> {project.likes}
-                            </span>
-                            <span className="bg-black/70 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
-                              <Eye className="h-3 w-3 text-blue-400" /> {project.views}
-                            </span>
-                          </div>
                         </div>
 
                         {/* Content */}
@@ -467,11 +477,9 @@ export function ProjectsSection() {
                           <h3 className="text-base font-semibold text-white group-hover:text-purple-400 transition-colors">
                             {project.title}
                           </h3>
-
                           <p className="text-gray-400 text-sm mt-2 line-clamp-2">
                             {project.description}
                           </p>
-
                           {/* Tech badges */}
                           <div className="flex flex-wrap gap-1 mt-3">
                             {project.technologies.slice(0, 3).map((tech, i) => (
@@ -485,14 +493,10 @@ export function ProjectsSection() {
                               </Badge>
                             )}
                           </div>
-
                           {/* Button */}
                           <div className="mt-4">
                             <a href={project.github} target="_blank" rel="noopener noreferrer">
-                              <Button
-                                size="sm"
-                                className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white text-xs h-8"
-                              >
+                              <Button size="sm" className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white text-xs h-8">
                                 <Github className="h-3 w-3 mr-2" />
                                 Code
                               </Button>
@@ -500,20 +504,13 @@ export function ProjectsSection() {
                           </div>
                         </CardContent>
 
-                        {/* Hover Overlay Modal */}
+                        {/* Hover Overlay Modal (Desktop) */}
                         <div className="absolute inset-0 bg-black/90 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col p-6">
-                          {/* Scrollable Content Area */}
                           <div className="flex-1 overflow-hidden">
                             <div className="h-full overflow-y-auto hide-scrollbar" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                               <div className="text-center space-y-4">
-                                <h3 className="text-lg font-bold text-white">
-                                  {project.title}
-                                </h3>
-                                
-                                <p className="text-gray-300 text-sm leading-relaxed">
-                                  {project.description}
-                                </p>
-
+                                <h3 className="text-lg font-bold text-white">{project.title}</h3>
+                                <p className="text-gray-300 text-sm leading-relaxed">{project.description}</p>
                                 <div className="space-y-2">
                                   <p className="text-purple-400 text-xs font-medium">Technologies Used:</p>
                                   <div className="flex flex-wrap gap-1 justify-center">
@@ -527,8 +524,6 @@ export function ProjectsSection() {
                               </div>
                             </div>
                           </div>
-
-                          {/* Fixed GitHub Icon Button - Always Visible */}
                           <div className="flex justify-center pt-4 flex-shrink-0">
                             <a
                               href={project.github}
@@ -559,8 +554,6 @@ export function ProjectsSection() {
                 ))}
               </div>
             </div>
-
-            {/* Other Projects removed */}
           </>
         )}
 
@@ -569,17 +562,17 @@ export function ProjectsSection() {
           <>
             {/* Featured Certificates */}
             <div className="relative mb-16">
-              {/* <h2 className="text-3xl font-bold text-center mb-8">
-                Featured <span className="text-purple-500">Certifications</span>
-              </h2> */}
-              
-              {/* Mobile Layout - Vertical Stack */}
+              {/* Mobile Layout - Horizontal Carousel */}
               <div className="block md:hidden">
-                <div className="grid gap-4">
+                <div
+                  ref={mobileCertificatesRef}
+                  onScroll={onMobileCertificatesScroll}
+                  className="flex gap-4 overflow-x-auto snap-x snap-mandatory hide-scrollbar pb-4 px-4"
+                >
                   {certificates.slice(0, 3).map((cert, index) => (
-                    <div key={index} className="w-full">
+                    <div key={index} className="flex-shrink-0 w-[calc(100vw-2rem)] snap-center">
                       <Card className="bg-gray-900 border-gray-800 overflow-hidden group hover:border-purple-500/50 transition-all duration-300 h-[500px] relative">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 h-full">
+                        <div className="grid grid-cols-1 gap-4 p-4 h-full">
                           <div className="relative overflow-hidden rounded-lg">
                             <Image
                               src={cert.image || "/placeholder.svg"}
@@ -588,23 +581,14 @@ export function ProjectsSection() {
                               height={300}
                               className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                             />
-                            <div className="absolute top-4 right-4 flex gap-2">
-                              <div className="bg-black/70 backdrop-blur-sm rounded-full px-3 py-1 flex items-center gap-1">
-                                <Award className="h-3 w-3 text-purple-400" />
-                                <span className="text-xs text-white">Certified</span>
-                              </div>
-                            </div>
                           </div>
-
                           <div className="space-y-3 flex flex-col h-full">
                             <h3 className="text-lg font-bold text-white group-hover:text-purple-400 transition-colors">
                               {cert.title}
                             </h3>
-                            
                             <p className="text-gray-400 text-sm leading-relaxed line-clamp-4">
                               {cert.description}
                             </p>
-
                             <div className="flex flex-wrap gap-1">
                               <Badge variant="secondary" className="bg-purple-600/20 text-purple-300 text-xs">
                                 {cert.issuer}
@@ -616,70 +600,33 @@ export function ProjectsSection() {
                                 {cert.date}
                               </Badge>
                             </div>
-
                             <div className="mt-auto">
-                              <Button
-                                size="sm"
-                                className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white text-sm h-9"
-                              >
+                              <Button size="sm" className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white text-sm h-9">
                                 <Award className="h-4 w-4 mr-2" />
                                 View Details
                               </Button>
                             </div>
                           </div>
                         </div>
-
-                        {/* Hover Overlay Modal for Mobile */}
-                        <div className="absolute inset-0 bg-black/90 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col p-6">
-                          {/* Scrollable Content Area */}
-                          <div className="flex-1 overflow-hidden">
-                            <div className="h-full overflow-y-auto hide-scrollbar">
-                              <div className="text-center space-y-4">
-                                <h3 className="text-lg font-bold text-white">
-                                  {cert.title}
-                                </h3>
-                                
-                                <p className="text-gray-300 text-sm leading-relaxed">
-                                  {cert.description}
-                                </p>
-
-                                <div className="space-y-2">
-                                  <p className="text-purple-400 text-xs font-medium">Issuer:</p>
-                                  <div className="flex items-center gap-1 justify-center">
-                                    <Award className="h-3 w-3" />
-                                    {cert.issuer}
-                                  </div>
-                                </div>
-                                <div className="space-y-2">
-                                  <p className="text-purple-400 text-xs font-medium">Credential ID:</p>
-                                  <div className="flex items-center gap-1 justify-center">
-                                    <span className="text-gray-400 text-xs">{cert.credentialId}</span>
-                                  </div>
-                                </div>
-                                <div className="space-y-2">
-                                  <p className="text-purple-400 text-xs font-medium">Category:</p>
-                                  <div className="flex items-center gap-1 justify-center">
-                                    <span className="text-gray-400 text-xs">{cert.category}</span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Fixed Award Icon Button - Always Visible */}
-                          <div className="flex justify-center pt-4 flex-shrink-0">
-                            <a
-                              href="#"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center justify-center w-12 h-12 bg-purple-600 hover:bg-purple-700 rounded-full transition-colors duration-200"
-                            >
-                              <Award className="h-5 w-5 text-white" />
-                            </a>
-                          </div>
-                        </div>
                       </Card>
                     </div>
+                  ))}
+                </div>
+                {/* Dots */}
+                <div className="flex justify-center mt-6 gap-2">
+                  {certificates.slice(0, 3).map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => {
+                        const el = mobileCertificatesRef.current
+                        if (el) el.scrollTo({ left: index * el.clientWidth, behavior: 'smooth' })
+                        setMobileCertificatesIndex(index)
+                      }}
+                      className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                        index === mobileCertificatesIndex ? 'bg-purple-500' : 'bg-gray-600/70'
+                      }`}
+                      aria-label={`Go to slide ${index + 1}`}
+                    />
                   ))}
                 </div>
               </div>
@@ -714,11 +661,9 @@ export function ProjectsSection() {
                           <h3 className="text-base font-semibold text-white group-hover:text-purple-400 transition-colors">
                             {cert.title}
                           </h3>
-
                           <p className="text-gray-400 text-sm mt-2 line-clamp-2">
                             {cert.description}
                           </p>
-
                           {/* Badges */}
                           <div className="flex flex-wrap gap-1 mt-3">
                             <Badge className="bg-purple-600/20 text-purple-300 text-[10px]">
@@ -728,68 +673,14 @@ export function ProjectsSection() {
                               {cert.category}
                             </Badge>
                           </div>
-
                           {/* Button */}
                           <div className="mt-4">
-                            <Button
-                              size="sm"
-                              className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white text-xs h-8"
-                            >
+                            <Button size="sm" className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white text-xs h-8">
                               <Award className="h-3 w-3 mr-2" />
                               View Details
                             </Button>
                           </div>
                         </CardContent>
-
-                        {/* Hover Overlay Modal */}
-                        <div className="absolute inset-0 bg-black/90 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col p-6">
-                          {/* Scrollable Content Area */}
-                          <div className="flex-1 overflow-hidden">
-                            <div className="h-full overflow-y-auto hide-scrollbar" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-                              <div className="text-center space-y-4">
-                                <h3 className="text-lg font-bold text-white">
-                                  {cert.title}
-                                </h3>
-                                
-                                <p className="text-gray-300 text-sm leading-relaxed">
-                                  {cert.description}
-                                </p>
-
-                                <div className="space-y-2">
-                                  <p className="text-purple-400 text-xs font-medium">Issuer:</p>
-                                  <div className="flex items-center gap-1 justify-center">
-                                    <Award className="h-3 w-3" />
-                                    {cert.issuer}
-                                  </div>
-                                </div>
-                                <div className="space-y-2">
-                                  <p className="text-purple-400 text-xs font-medium">Credential ID:</p>
-                                  <div className="flex items-center gap-1 justify-center">
-                                    <span className="text-gray-400 text-xs">{cert.credentialId}</span>
-                                  </div>
-                                </div>
-                                <div className="space-y-2">
-                                  <p className="text-purple-400 text-xs font-medium">Category:</p>
-                                  <div className="flex items-center gap-1 justify-center">
-                                    <span className="text-gray-400 text-xs">{cert.category}</span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Fixed Award Icon Button - Always Visible */}
-                          <div className="flex justify-center pt-4 flex-shrink-0">
-                            <a
-                              href="#"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center justify-center w-12 h-12 bg-purple-600 hover:bg-purple-700 rounded-full transition-colors duration-200"
-                            >
-                              <Award className="h-5 w-5 text-white" />
-                            </a>
-                          </div>
-                        </div>
                       </Card>
                     </div>
                   ))}
