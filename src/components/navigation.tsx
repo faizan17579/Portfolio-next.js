@@ -56,7 +56,7 @@ export function Navigation() {
             className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
           >
             <Code className="h-8 w-8 text-purple-500" />
-            <span className="text-xl font-bold">Faizan Rasheed</span>
+            <span className="text-xl font-bold text-white">Faizan Rasheed</span>
           </button>
 
           {/* Desktop Navigation */}
@@ -80,31 +80,36 @@ export function Navigation() {
             })}
           </div>
 
-          {/* Mobile menu button */}
-          <div className="md:hidden">
-            <Button variant="ghost" size="sm" onClick={() => setIsOpen(!isOpen)}>
+          {/* Mobile menu button - Always visible on mobile */}
+          <div className="md:hidden flex items-center mobile-nav-button">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => setIsOpen(!isOpen)}
+              className="text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white"
+            >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </Button>
           </div>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Mobile Navigation - Improved positioning and visibility */}
         {isOpen && (
-          <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-900 rounded-lg mt-2">
+          <div className="md:hidden absolute top-full left-0 right-0 bg-black/95 backdrop-blur-md border-b border-gray-800 mobile-nav-menu">
+            <div className="px-4 py-3 space-y-2">
               {navItems.map((item) => {
                 const Icon = item.icon
                 return (
                   <button
                     key={item.id}
                     onClick={() => scrollToSection(item.id)}
-                    className={`flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium transition-colors w-full text-left ${
+                    className={`flex items-center space-x-3 px-4 py-3 rounded-md text-base font-medium transition-colors w-full text-left ${
                       activeSection === item.id
-                        ? "text-purple-400 bg-purple-500/10"
+                        ? "text-purple-400 bg-purple-500/20"
                         : "text-gray-300 hover:text-white hover:bg-gray-800"
                     }`}
                   >
-                    <Icon className="h-5 w-5" />
+                    <Icon className="h-5 w-5 flex-shrink-0" />
                     <span>{item.label}</span>
                   </button>
                 )

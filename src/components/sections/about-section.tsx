@@ -49,33 +49,24 @@ export function AboutSection() {
             <h1 className="text-4xl font-bold text-white">
               🚀 Hey, I’m <span className="text-purple-500">Faizan Rasheed</span>!
             </h1>
+                      <p className="text-gray-400 leading-relaxed text-lg">
+            I’m a <span className="text-purple-400 font-semibold">final-year Software Engineering student</span> at 
+            <span className="text-blue-400 font-semibold"> FAST Islamabad</span>, passionate about building scalable 
+            web applications 🚀 and AI-driven solutions 🤖. With experience in the 
+            <span className="font-semibold text-purple-400"> MERN stack</span>, 
+            <span className="font-semibold text-purple-400"> Python</span>, 
+            <span className="font-semibold text-purple-400"> Next.js</span>, and 
+            <span className="font-semibold text-purple-400"> DevOps practices ⚡</span>, I’ve worked on hands-on projects 
+            and internships in AI and web development. I continuously expand my expertise with certifications in 
+            Cloud ☁️, AI, and modern software practices.  
+            <br /><br />
+            I specialize in creating <span className="text-blue-400 font-semibold">AI-based applications</span>, 
+            integrating <span className="text-blue-400 font-semibold">machine learning models</span> into web platforms, 
+            building <span className="text-blue-400 font-semibold">scalable backend systems</span>, and leveraging 
+            <span className="text-blue-400 font-semibold">DevOps tools</span> to automate deployment and deliver reliable, 
+            production-ready solutions 🔥.
+          </p>
 
-            <p className="text-gray-400 leading-relaxed text-lg">
-  I’m a <span className="text-purple-400 font-semibold">Final-year Software Engineering student</span> at 
-  <span className="text-blue-400 font-semibold"> FAST Islamabad</span>, passionate about building 
-  <span className="text-pink-400"> scalable web apps 🚀</span> and 
-  <span className="text-green-400"> AI-driven solutions 🤖</span>.
-  <br /><br />
-  Experienced with the 
-  <span className="text-yellow-400"> MERN stack</span>, 
-  <span className="text-purple-400"> Python</span>, 
-  <span className="text-blue-400"> Next.js</span>, and 
-  <span className="text-orange-400"> DevOps practices ⚡</span>, with hands-on projects and internships in 
-  <span className="text-pink-400"> AI</span> and 
-  <span className="text-teal-400"> web development</span>.
-  <br /><br />
-  Continuously learning through certifications in 
-  <span className="text-cyan-400"> Cloud ☁️</span>, 
-  <span className="text-purple-400"> AI</span>, and 
-  <span className="text-indigo-400"> modern software practices</span>.
-  <br /><br />
-  I specialize in creating 
-  <span className="text-purple-400"> AI-based applications 🤩</span>, integrating 
-  <span className="text-green-400"> machine learning models</span> into web platforms, building 
-  <span className="text-blue-400"> scalable backend systems</span>, and leveraging 
-  <span className="text-orange-400"> DevOps tools ⚙️</span> to automate deployment and ensure reliable, 
-  <span className="text-pink-400 font-semibold"> production-ready solutions 🔥</span>.
-</p>
 
           </motion.div>
 
